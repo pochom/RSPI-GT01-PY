@@ -18,7 +18,23 @@ GPIO.setup(LED4,GPIO.OUT)
 GPIO.setup(NGEN,GPIO.OUT)
 GPIO.setup(RST,GPIO.IN)
 
+#Single GPIO OUT Control
+def gpio_write(x,y):
+    try:
+        if y == 1:
+            GPIO.output(x, GPIO.HIGH)
+        else:
+            GPIO.output(x, GPIO.LOW)
+    except KeyboardInterrupt:
+        GPIO.cleanup()
 
+
+#Get GPIO IN Value
+def gpio_read(x):
+    return GPIO.input(x)
+
+
+#Single LED Blink
 def gpio_blink(x,y):
     try:
         GPIO.output(x, GPIO.HIGH)
@@ -29,6 +45,7 @@ def gpio_blink(x,y):
         GPIO.cleanup()
         
 
+#Dual LED Blink
 def gpio_blink2(x,y,z):
     try:
         GPIO.output(x, GPIO.HIGH)
@@ -41,22 +58,12 @@ def gpio_blink2(x,y,z):
         GPIO.cleanup()
 
 
+#GPIO Port Clean-up
 def gpio_cleanup():
     GPIO.cleanup()
         
         
-def gpio_write(x,y):
-    try:
-        if y == 1:
-            GPIO.output(x, GPIO.HIGH)
-        else:
-            GPIO.output(x, GPIO.LOW)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
 
-
-def gpio_read(x):
-    return GPIO.input(x)
         
 
 for num in range(5):
