@@ -3,11 +3,12 @@
 import time
 import RPi.GPIO as GPIO
 import GPIO_Control as GCM
+import RTC
 import threading
 
+"""GPIO Control Test
 #GPIO SETUP
 GCM.gpio_setup()
-
 
 while True:
     try:
@@ -46,3 +47,11 @@ while True:
         time.sleep(0.1)
     except KeyboardInterrupt:
         GCM.gpio_cleanup()
+"""
+
+#RTC Control
+RTC.rtc_init()
+RTC.rtc_set()
+time.sleep(1)
+print(RTC.rtc_get())
+
