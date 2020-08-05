@@ -12,6 +12,22 @@ GCM.gpio_setup()
 while True:
     try:
     #Put Main Loop Below
+        for i in range(3):
+            GCM.led_blink(15, 0.25)
+            print(GCM.reset_read())
+        for i in range(3):
+            GCM.led_blink(10, 0.25)
+            print(GCM.reset_read())
+        for i in range(3):
+            GCM.led_blink(5, 0.25)
+            print(GCM.reset_read())
+        for i in range(3):
+            GCM.led_blink(9, 0.25)
+            print(GCM.reset_read())
+        for i in range(3):
+            GCM.led_blink(6, 0.25)
+            print(GCM.reset_read())
+
         GCM.led_set(1,1)
         time.sleep(0.1)
         GCM.led_set(2,1)
@@ -30,4 +46,3 @@ while True:
         time.sleep(0.1)
     except KeyboardInterrupt:
         GCM.gpio_cleanup()
-

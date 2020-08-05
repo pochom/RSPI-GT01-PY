@@ -19,6 +19,23 @@ def gpio_setup():
     GPIO.setup(NGEN,GPIO.OUT)
     GPIO.setup(RST,GPIO.IN)
 
+
+#NGEN Control
+def ngen_set(logic):
+    try:
+        if logic == 1:
+            GPIO.output(NGEN, GPIO.HIGH)
+        elif logic == 0:
+            GPIO.output(NGEN, GPIO.LOW)
+    except KeyboardInterrupt:
+        gpio_cleanup()
+
+
+#Get RESET Status
+def reset_read():
+    return GPIO.input(RST)
+
+
 #Single GPIO OUT Control
 def led_set(port_hex,logic):
     try:
@@ -80,6 +97,61 @@ def led_set(port_hex,logic):
             elif logic == 0:
                 GPIO.output(LED4, GPIO.LOW)
 
+        elif port_hex == 9:
+            if logic == 1:
+                GPIO.output(LED1, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED1, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
+        elif port_hex == 10:
+            if logic == 1:
+                GPIO.output(LED2, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED2, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
+        elif port_hex == 11:
+            if logic == 1:
+                GPIO.output(LED1, GPIO.HIGH)
+                GPIO.output(LED2, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED1, GPIO.LOW)
+                GPIO.output(LED2, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
+        elif port_hex == 12:
+            if logic == 1:
+                GPIO.output(LED3, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED3, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
+        elif port_hex == 13:
+            if logic == 1:
+                GPIO.output(LED1, GPIO.HIGH)
+                GPIO.output(LED3, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED1, GPIO.LOW)
+                GPIO.output(LED3, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
+
+        elif port_hex == 14:
+            if logic == 1:
+                GPIO.output(LED2, GPIO.HIGH)
+                GPIO.output(LED3, GPIO.HIGH)
+                GPIO.output(LED4, GPIO.HIGH)
+            elif logic == 0:
+                GPIO.output(LED2, GPIO.LOW)
+                GPIO.output(LED3, GPIO.LOW)
+                GPIO.output(LED4, GPIO.LOW)
+
         elif port_hex == 15:
             if logic == 1:
                 GPIO.output(LED1, GPIO.HIGH)
@@ -96,31 +168,13 @@ def led_set(port_hex,logic):
         GPIO.cleanup()
 
 
-#Get GPIO IN Value
-def gpio_read(x):
-    return GPIO.input(x)
-
-
-#Single LED Blink
-def gpio_blink(x,y):
+#LED Blink
+def led_blink(port_hex_blink,blink_period):
     try:
-        GPIO.output(x, GPIO.HIGH)
-        time.sleep(y)
-        GPIO.output(x, GPIO.LOW)
-        time.sleep(y)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-        
-
-#Dual LED Blink
-def gpio_blink2(x,y,z):
-    try:
-        GPIO.output(x, GPIO.HIGH)
-        GPIO.output(y, GPIO.HIGH)
-        time.sleep(z)
-        GPIO.output(x, GPIO.LOW)
-        GPIO.output(y, GPIO.LOW)
-        time.sleep(z)
+        led_set(port_hex_blink, GPIO.HIGH)
+        time.sleep(blink_period)
+        led_set(port_hex_blink, GPIO.LOW)
+        time.sleep(blink_period)
     except KeyboardInterrupt:
         GPIO.cleanup()
 
