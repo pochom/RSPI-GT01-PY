@@ -5,6 +5,7 @@ import time
 import serial
 ser = serial.Serial('/dev/ttyUSB0', 9600)
 pos_received = []
+unique_pos = []
 
 login_id = "root"
 login_pw = "pasuwa-do"
@@ -63,13 +64,28 @@ def serial_test():
                 pos_extracted = ts_data[pos_start:pos_end]
                 pos_received.append(pos_extracted)
     
-        #リストに格納した値を一括出力
+        
         else:
+            
+            #リストに格納した値を一括出力
+            #Unique座標をリストに代入
             for i in range(capture_data_count):
                 print(str(i + 1) + ":" + pos_received[i])
+                if unique_pos.count(pos_received[i]) == 0:
+                    unique_pos.append(pos_received[i])
+                    print(len(unique_pos))
+            
 
+            
 
 serial_test()
-print("Data numbers in the list is")
+print("Data numbers in the list: ", end="")
 print(len(pos_received))
+
+print("Unique position number: ", end="")
+print(len(unique_pos))
+
+print("Unique position rate: ", end="")
+print(str(len(unique_pos) / len(pos_received) * 100) + "%")
+
 print("Position data was correctly captured!!!")
