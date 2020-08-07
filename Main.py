@@ -4,13 +4,14 @@ import time
 import RPi.GPIO as GPIO
 import GPIO_Control as GCM
 import RTC
+import Serial_Control as SC
 import threading
 
 #GPIO Control Test
 #GPIO SETUP
 GCM.gpio_setup()
 
-while True:
+for i in range(2):
     try:
     #Put Main Loop Below
         for i in range(3):
@@ -54,3 +55,18 @@ RTC.rtc_init()
 time.sleep(1)
 print(RTC.rtc_get())
 
+#Serial Access
+SC.serial_login()
+result_a, result_b, result_x = SC.serial_test()
+print("Data numbers in the list: ", end="")
+print(result_a)
+
+print("Unique position number: ", end="")
+print(result_b)
+
+print("Unique position rate: ", end="")
+print(str(result_x) + "%")
+
+print("Position data was correctly captured!!!")
+
+GCM.gpio_cleanup()
