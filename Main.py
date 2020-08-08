@@ -11,7 +11,7 @@ import threading
 #GPIO SETUP
 GCM.gpio_setup()
 
-for i in range(2):
+for i in range(1):
     try:
     #Put Main Loop Below
         for i in range(3):
@@ -48,6 +48,7 @@ for i in range(2):
         time.sleep(0.1)
     except KeyboardInterrupt:
         GCM.gpio_cleanup()
+GCM.gpio_cleanup()
 
 
 #RTC Control

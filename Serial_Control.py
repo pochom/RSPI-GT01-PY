@@ -65,7 +65,7 @@ def serial_test():
     while len(pos_received) < capture_data_count:
         ts_data = ser.readline().strip().decode('utf-8')
         pos_boolean = "[1]" in ts_data
-
+ 
         #座標を含むログから座標部分を抽出しリストに代入
         if pos_boolean == True:
             pos_start = ts_data.find("[1][") + 4
@@ -112,7 +112,7 @@ def serial_test():
     test_report_header.append("DATA B: " + str(result_b))
     test_report_header.append("DATA X: " + str(result_x) + "%")
     
-
+    #PASS/FAIL判定行追加
     if float(result_x) < criteria * 100 :
         test_report_header.append("RESULT: PASS")
         test_report_header.append("\n")
