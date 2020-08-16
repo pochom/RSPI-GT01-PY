@@ -11,6 +11,7 @@ NGEN = 24
 RST = 21
 
 def gpio_setup():
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(LED1,GPIO.OUT)
     GPIO.setup(LED2,GPIO.OUT)
