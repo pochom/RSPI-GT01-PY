@@ -6,7 +6,7 @@ import RTC
 import pathlib
 import os
 
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/ttyS0', 9600)
 pos_received = []
 unique_pos = []
 
