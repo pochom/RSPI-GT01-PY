@@ -7,6 +7,7 @@ import RTC
 import Serial_Control as SC
 import threading
 
+"""
 #GPIO Control Test
 #GPIO SETUP
 GCM.gpio_setup()
@@ -49,16 +50,16 @@ for i in range(1):
     except KeyboardInterrupt:
         GCM.gpio_cleanup()
 GCM.gpio_cleanup()
-
+"""
 
 #RTC Control
-RTC.rtc_init()
-time.sleep(1)
-print(RTC.rtc_get())
+#RTC.rtc_init()
+#time.sleep(1)
+#print(RTC.rtc_get())
 
 #Serial Access
 SC.serial_login()
-result_a, result_b, result_x = SC.serial_test()
+result_a, result_b, result_x, criteria = SC.serial_test()
 print("Data numbers in the list: ", end="")
 print(result_a)
 
@@ -68,6 +69,9 @@ print(result_b)
 print("Unique position rate: ", end="")
 print(str(result_x) + "%")
 
-print("Position data was correctly captured!!!")
+if float(result_x) < criteria *100:
+    print("Test Result: PASS")
+else:
+    print("Test Result: FAIL")
 
-GCM.gpio_cleanup()
+print("GT Test was correctly finished!!!")

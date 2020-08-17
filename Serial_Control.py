@@ -5,41 +5,42 @@ import time
 import RTC
 import pathlib
 import os
+import datetime
 
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/ttyS0', 9600)
+ser_timeout = serial.Serial('/dev/ttyS0', 9600, timeout=0.1)
 pos_received = []
 unique_pos = []
 
 login_id = "root"
-login_pw = "pasuwa-do"
+login_pw = "..itiss"
 capture_data_count = 100
 log_dir = "/home/pi/python/RSPI-GT01-PY/log"
 criteria = 0.25
 
+
 #Elite16用のログイン
-"""
 def login_sm():
-    while True:
-        ser.write(login_id)
-        res = "Password:" in ser.readline().decode('utf-8')
-        if res == True:
-            time.sleep(1)
-            ser.write(login_pw)
-        elif res == False:
-            time.sleep(1)
-"""
-
-
-#Test用のログイン
-def login_sm():
+    print("Trying to login")
     ser.write(bytes(login_id, encoding='utf-8'))
-    time.sleep(0.5)
+    ser.write(bytes("\n", encoding='utf-8'))
+    time.sleep(1)
     ser.write(bytes(login_pw, encoding='utf-8'))
+    ser.write(bytes("\n", encoding='utf-8'))
 
+    ser.reset_input_buffer()
+    [ser.write(bytes("\n", encoding='utf-8')) for i in range(5)]
 
-#Touchscreen Test
-def ts_test():
-    ser.write(bytes("TOUCHSCREEN_TEST -M", encoding='utf-8'))
+    data = []
+    cnt = 10
+    for i in range(cnt):
+        data.append(ser_timeout.readline().strip().decode('utf-8'))
+        print("log" + str(i) + ": " + data[i])
+    ser.reset_input_buffer()
+    for i in range(cnt):
+        if "root@" in data[i]:
+            print ("Logged in.")
+            break
 
 
 #Login to Elite
@@ -48,7 +49,12 @@ def serial_login():
     print("Waiting serial log...")
     login_detect = False
     while login_detect != True:
-        data = ser.readline().strip().decode('utf-8')
+        try:
+            data = ser.readline().strip().decode('utf-8')
+        #Elite電源投入時のノイズに対する例外処理
+        except UnicodeDecodeError:
+            ser.reset_input_buffer()
+            data = ""
         print(data)
         login_detect = "mon_imx login:" in data
 
@@ -59,7 +65,13 @@ def serial_login():
 
 #TS-test Main Function
 def serial_test():
-    ts_test()
+
+    #Touchscreen Test
+    ser.write(bytes("touchscreen_test -m", encoding='utf-8'))
+    ser.write(bytes("\n", encoding='utf-8'))
+    print("Touchscreen_test started.")
+    data = ser.readline().strip().decode('utf-8')
+    print(data)
 
     #取得座標数が指定値に達するまでリストに代入し続ける
     while len(pos_received) < capture_data_count:
@@ -95,7 +107,8 @@ def serial_test():
     os.makedirs(log_dir, exist_ok=True)
 
     #現在日時取得
-    current_datetime = RTC.rtc_get()
+    #current_datetime = RTC.rtc_get()
+    current_datetime = str(datetime.datetime.now())[0:10] + "_" + str(datetime.datetime.now())[11:19]
 
     #ファイル名代入、ファイルパス設定
     file_name = "Test_Report_" + current_datetime + ".log"
@@ -116,6 +129,7 @@ def serial_test():
     if float(result_x) < criteria * 100 :
         test_report_header.append("RESULT: PASS")
         test_report_header.append("\n")
+        
     else:
         test_report_header.append("RESULT: FAIL")
         test_report_header.append("\n")
@@ -129,5 +143,7 @@ def serial_test():
         tr_write.write(trh)
         tr_write.write(tr)
 
-    return result_a, result_b, result_x
+    criteria_return = criteria
+
+    return result_a, result_b, result_x, criteria_return
 
