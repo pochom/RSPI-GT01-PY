@@ -7,71 +7,60 @@ import RTC
 import Serial_Control as SC
 import threading
 
-"""
-#GPIO Control Test
-#GPIO SETUP
-GCM.gpio_setup()
+def main_init():
+    #GPIO SETUP
+    GCM.gpio_setup()
 
-for i in range(1):
-    try:
-    #Put Main Loop Below
-        for i in range(3):
-            GCM.led_blink(15, 0.25)
-            print(GCM.reset_read())
-        for i in range(3):
-            GCM.led_blink(10, 0.25)
-            print(GCM.reset_read())
-        for i in range(3):
-            GCM.led_blink(5, 0.25)
-            print(GCM.reset_read())
-        for i in range(3):
-            GCM.led_blink(9, 0.25)
-            print(GCM.reset_read())
-        for i in range(3):
-            GCM.led_blink(6, 0.25)
-            print(GCM.reset_read())
+    #RTC Control
+    #RTC.rtc_init()
+    #time.sleep(1)
+    #print(RTC.rtc_get())
 
-        GCM.led_set(1,1)
-        time.sleep(0.1)
-        GCM.led_set(2,1)
-        time.sleep(0.1)
+
+def main_function():
+    #LED1(init): ON
+    GCM.led_set(15,0)
+    GCM.led_set(1,1)
+
+    #Serial Login
+    SC.serial_login()
+
+    #マルチスレッド処理(LED blink, GT Test)
+    thread_led2_blink = threading.Thread(target=GCM.led_blink(2,0.5))
+    thread_login = threading.Thread(target=result_a, result_b, result_x, criteria = SC.serial_test())
+    thread_led2_blink.start()
+    thread_login.start()
+    thread_login.join()
+    thread_led2_blink.stop()
+
+    print("Data numbers in the list: ", end="")
+    print(result_a)
+    print("Unique position number: ", end="")
+    print(result_b)
+    print("Unique position rate: ", end="")
+    print(str(result_x) + "%")
+
+    if float(result_x) < criteria *100:
+        print("Test Result: PASS")
+        GCM.led_set(15,0)
         GCM.led_set(4,1)
-        time.sleep(0.1)
+    else:
+        print("Test Result: FAIL")
+        GCM.led_set(15,0)
         GCM.led_set(8,1)
-        time.sleep(0.1)
-        GCM.led_set(8,0)
-        time.sleep(0.1)
-        GCM.led_set(4,0)
-        time.sleep(0.1)
-        GCM.led_set(2,0)
-        time.sleep(0.1)
-        GCM.led_set(1,0)
-        time.sleep(0.1)
-    except KeyboardInterrupt:
-        GCM.gpio_cleanup()
-GCM.gpio_cleanup()
-"""
 
-#RTC Control
-#RTC.rtc_init()
-#time.sleep(1)
-#print(RTC.rtc_get())
+    print("GT Test was correctly finished!!!")
+    print("If you would like to run the test again, press reset button.")
 
-#Serial Access
-SC.serial_login()
-result_a, result_b, result_x, criteria = SC.serial_test()
-print("Data numbers in the list: ", end="")
-print(result_a)
 
-print("Unique position number: ", end="")
-print(result_b)
 
-print("Unique position rate: ", end="")
-print(str(result_x) + "%")
 
-if float(result_x) < criteria *100:
-    print("Test Result: PASS")
-else:
-    print("Test Result: FAIL")
-
-print("GT Test was correctly finished!!!")
+if __name__ == '__main__':
+    while True:
+        main_init()
+        main_function()
+        while GCM.reset_read() == 1:
+            pass
+            time.sleep(0.05)
+        else:
+            break

@@ -171,13 +171,14 @@ def led_set(port_hex,logic):
 
 #LED Blink
 def led_blink(port_hex_blink,blink_period):
-    try:
-        led_set(port_hex_blink, GPIO.HIGH)
-        time.sleep(blink_period)
-        led_set(port_hex_blink, GPIO.LOW)
-        time.sleep(blink_period)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
+    while True:
+        try:
+            led_set(port_hex_blink, GPIO.HIGH)
+            time.sleep(blink_period)
+            led_set(port_hex_blink, GPIO.LOW)
+            time.sleep(blink_period)
+        except KeyboardInterrupt:
+            GPIO.cleanup()
 
 
 #GPIO Port Clean-up

@@ -7,6 +7,14 @@ import pathlib
 import os
 import datetime
 
+
+
+
+
+
+
+
+"""
 ser = serial.Serial('/dev/ttyS0', 9600)
 pos_received = []
 unique_pos = []
@@ -33,7 +41,7 @@ def login_sm():
             print(data)
             time.sleep(0.2)
 
-"""
+
 #Test用のログイン
 def login_sm():
     print("Trying to login")
@@ -45,7 +53,7 @@ def login_sm():
     ser.write(bytes(login_pw, encoding='utf-8'))
     data = ser.readline().strip().decode('utf-8')
     print(data)
-"""
+
 
 #Touchscreen Test
 def ts_test():
@@ -87,7 +95,6 @@ if __name__ == '__main__':
 
 
 
-"""
 log_dir = "/home/pi/python/RSPI-GT01-PY/log"
 
 #log_dirディレクトリの存在確認後、無ければ作成
@@ -101,7 +108,6 @@ file_name = "Test_Report_" + current_datetime + ".log"
 file_path = pathlib.Path(log_dir + "/" + file_name)
 print(file_path)
 file_path.touch(exist_ok=False)
-
 
 
 test_report_header = []
