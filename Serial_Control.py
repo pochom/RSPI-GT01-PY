@@ -6,11 +6,12 @@ import RTC
 import pathlib
 import os
 import datetime
+import GPIO_Control as GC
 
 ser = serial.Serial('/dev/ttyS0', 9600)
 ser_timeout = serial.Serial('/dev/ttyS0', 9600, timeout=0.1)
-pos_received = []
-unique_pos = []
+pos_received_global = []
+unique_pos_global = []
 
 login_id = "root"
 login_pw = "..itiss"
@@ -65,13 +66,18 @@ def serial_login():
 
 #TS-test Main Function
 def serial_test():
+    #Variable init
+    pos_received = pos_received_global
+    unique_pos = unique_pos_global
 
     #Touchscreen Test
     ser.write(bytes("touchscreen_test -m", encoding='utf-8'))
     ser.write(bytes("\n", encoding='utf-8'))
+    #ノイズ印加開始
+    GC.ngen_set(1)
     print("Touchscreen_test started.")
-    data = ser.readline().strip().decode('utf-8')
-    print(data)
+    #data = ser.readline().strip().decode('utf-8')
+    #print(data)
 
     #取得座標数が指定値に達するまでリストに代入し続ける
     while len(pos_received) < capture_data_count:
@@ -85,7 +91,9 @@ def serial_test():
             pos_extracted = ts_data[pos_start:pos_end]
             pos_received.append(pos_extracted)
        
-    else:  
+    else:
+        #ノイズ印加停止
+        GC.ngen_set(0)
         #リストに格納した値を一括出力
         #Unique座標をリストに代入
         pos_extracted_list = []

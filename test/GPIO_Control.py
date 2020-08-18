@@ -169,12 +169,16 @@ def led_set(port_hex,logic):
         GPIO.cleanup()
 
 
-#LED点滅関数（ポート番号、周期）
-def blink_led(x,y):
-    led_set(x, 1)
-    time.sleep(y)
-    led_set(x, 0)
-    time.sleep(y)
+#LED Blink
+def led_blink(port_hex_blink,blink_period):
+    while True:
+        try:
+            led_set(port_hex_blink, GPIO.HIGH)
+            time.sleep(blink_period)
+            led_set(port_hex_blink, GPIO.LOW)
+            time.sleep(blink_period)
+        except KeyboardInterrupt:
+            GPIO.cleanup()
 
 
 #GPIO Port Clean-up
