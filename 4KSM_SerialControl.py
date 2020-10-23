@@ -7,10 +7,11 @@ import RPi.GPIO as GPIO
 import datetime
 
 #GPIO Init
-RELAY = 7
+RELAY = 21
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RELAY,GPIO.OUT)
+GPIO.output(RELAY, GPIO.LOW)
 
 #Serial Port Init
 ser = serial.Serial('/dev/ttyUSB0', 115200)
